@@ -1,0 +1,1 @@
+from .minimapi import Minimapi

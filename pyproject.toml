@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "minimapi"
+version = "0.0.1"
+description = "Easy and simple REST API from model"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+  'flask >= 2.2.0',
+  'pysondb >= 1.6.7',
+  'pyjwt >= 2.6.0',
+]
+classifiers = [
+  "Topic :: Internet :: WWW/HTTP",
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/minimapi/minimapi"
+"Bug Tracker" = "https://github.com/minimapi/minimapi/issues"
