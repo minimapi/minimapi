@@ -44,14 +44,14 @@ class Minimapi:
 
 	def add_routes(self):
 
-		@self.app.route('/login', methods=['POST'])
+		@self.app.route('/api/auth', methods=['POST'])
 		def login():
 			request_data = self.sanitizer.sanitize_request('auth', request.json)
 			if request_data:
 				return self.auth.login(request_data)
 			return 'Bad request', 400
 
-		@self.app.route('/logout', methods=['POST'])
+		@self.app.route('/api/auth', methods=['DELETE'])
 		@self.auth.check
 		def logout():
 			return self.auth.logout(request)
