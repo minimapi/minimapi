@@ -1,5 +1,3 @@
-import hashlib
-
 class Type:
 
 	@staticmethod
@@ -7,9 +5,6 @@ class Type:
 		return isinstance(value, str)
 
 	@staticmethod
-	def write(data):
+	def request_task(data):
+		import hashlib
 		return hashlib.sha256(data.encode('utf-8')).hexdigest()
-
-	@staticmethod
-	def read(data):
-		return data

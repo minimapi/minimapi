@@ -34,4 +34,4 @@ class Auth:
 		return '', 401
 
 	def logout(self, request):
-		return '', 200
+		return '', 404

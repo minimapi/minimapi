@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "minimapi"
-version = "0.0.2"
+version = "0.0.3"
 description = "Easy and simple REST API from model"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -12,7 +12,8 @@ dependencies = [
   'flask >= 2.2.0',
   'pysondb >= 1.6.7',
   'pyjwt >= 2.6.0',
-  'pyjwt >= 0.18.0',
+  'ecdsa >= 0.18.0',
+  'pyotp >= 2.7.0',
 ]
 classifiers = [
   "Topic :: Internet :: WWW/HTTP",

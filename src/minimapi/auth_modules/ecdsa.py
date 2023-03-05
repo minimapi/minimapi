@@ -41,4 +41,6 @@ class Auth:
 		return '', 401
 
 	def logout(self, request):
-		return '', 200
+		auth_id = request.headers.get('Authorization').split('.')[0]
+		self.database.update('auth', auth_id, {'public_key': None})
+		return '', 204

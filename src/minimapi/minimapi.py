@@ -66,7 +66,8 @@ class Minimapi:
 		def list(table):
 			if table in self.model:
 				if request.args:
-					data = self.database.read(table, **request.args)
+					request_args = self.sanitizer.sanitize_request(table, request.args.to_dict(), True)
+					data = self.database.read(table, **request_args)
 				else:
 					data = self.database.read(table)
 				return jsonify(self.sanitizer.sanitize_reponse(table, data, True))

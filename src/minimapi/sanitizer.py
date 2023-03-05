@@ -27,6 +27,8 @@ class Sanitizer:
 		if table not in self.model:
 			return False
 
+		comparison_tasks = {}
+
 		for property in data:
 			if property in self.model[table]:
 				if 'tags' in self.model[table][property] and 'encrypted' in self.model[table][property]['tags']:
@@ -36,6 +38,12 @@ class Sanitizer:
 				
 				if not self.check_type(type_to_check, property, data[property]):
 					return False
+
+				if type_to_check in self.types and data[property]:
+					if hasattr(self.types[type_to_check], 'comparison_task'):
+						comparison_tasks[property] = {'task':self.types[type_to_check].comparison_task, 'data':data[property]}
+					if hasattr(self.types[type_to_check], 'request_task'):
+						data[property] = self.types[type_to_check].request_task(data[property])
 			else:
 				return False
 		
@@ -46,6 +54,19 @@ class Sanitizer:
 						return False
 					else:
 						data[property] = None
+
+		if comparison_tasks:
+			search = {}
+			for property in data:
+				if property not in comparison_tasks:
+					if 'tags' in self.model[table][property] and 'required' in self.model[table][property]['tags']:
+						search[property] = data[property]
+			if search:
+				results = self.database.read(table, **search)
+				for result in results:
+					for task in comparison_tasks:
+						if comparison_tasks[task]['task'](comparison_tasks[task]['data'],result[task]):
+							data[task] = result[task]
 
 		return data
 
@@ -58,14 +79,28 @@ class Sanitizer:
 		for result in data:
 			row = {}
 			for property in result:
+				
 				if property == 'id':
 					row[property] = result[property] 
 				elif property in self.model[table]:
+					type_to_check = self.model[table][property]['type']
 					if 'tags' in self.model[table][property]:
+						
+						if 'encrypted' in self.model[table][property]['tags']:
+							type_to_check = 'text'
+						
+						if not self.check_type(type_to_check, property, result[property]):
+							row[property] = None
+						
 						if 'unlistable' in self.model[table][property]['tags'] and listing:
 							row[property] = '-'
 							continue
+						
+					if type_to_check in self.types and hasattr(self.types[type_to_check], 'response_task') and result[property]:
+						row[property] = self.types[type_to_check].response_task(result[property])
+						continue
+					
 					row[property] = result[property]
-					 
+			
 			data_to_return.append(row)
 		return data_to_return
