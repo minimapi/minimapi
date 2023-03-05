@@ -57,10 +57,14 @@ Currently supported types (based on inputs types):
 ```
 - text
 - number
+- url
 - password
 - date
 - email
 - url
+- sha265
+- pbkdf2
+- totp
 - foreign (property name must match another table name, value is foreign data id)
 ```
 
