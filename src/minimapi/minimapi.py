@@ -46,7 +46,7 @@ class Minimapi:
 
 		@self.app.route('/api/auth', methods=['POST'])
 		def login():
-			request_data = self.sanitizer.sanitize_request('auth', request.json)
+			request_data = self.sanitizer.sanitize_request('credential', request.json)
 			if request_data:
 				return self.auth.login(request_data)
 			return 'Bad request', 400

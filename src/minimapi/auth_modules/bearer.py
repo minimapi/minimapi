@@ -11,7 +11,7 @@ class Auth:
 		def wrapper(*args,**kargs):
 			try:
 				token = request.headers.get('Authorization').split(' ')[1]
-				if self.database.read('auth',token=token):
+				if self.database.read('credential',token=token):
 					return function(*args,**kargs)
 			except:
 				pass

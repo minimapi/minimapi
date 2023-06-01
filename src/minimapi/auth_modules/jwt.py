@@ -20,7 +20,7 @@ class Auth:
 		def wrapper(*args,**kargs):
 			try:
 				auth_data = jwt.decode(request.headers.get('Authorization'), self.secret, algorithms=[JWT_ALGO])
-				if self.database.read('auth',id=auth_data['ID']):
+				if self.database.read('credential',id=auth_data['ID']):
 					return function(*args,**kargs)
 			except:
 				pass
@@ -28,7 +28,7 @@ class Auth:
 		return wrapper
 
 	def login(self, request_data):
-		results = self.database.read('auth', **request_data)
+		results = self.database.read('credential', **request_data)
 		if len(results) == 1:
 			return jsonify({'token': jwt.encode({"ID": results[0]['id'], "exp": datetime.now(tz=timezone.utc)+timedelta(minutes=JWT_EXPIRATION_IN_MIN)}, self.secret, algorithm=JWT_ALGO)})
 		return '', 401

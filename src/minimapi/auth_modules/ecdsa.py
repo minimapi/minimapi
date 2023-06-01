@@ -19,8 +19,8 @@ class Auth:
 		def wrapper(*args,**kargs):
 			try:
 				auth_data = request.headers.get('Authorization').split('.')
-				if self.database.read('auth',id=auth_data[0]):
-					public_key = self.database.read('auth',id=auth_data[0])[0]['public_key']
+				if self.database.read('credential',id=auth_data[0]):
+					public_key = self.database.read('credential',id=auth_data[0])[0]['public_key']
 					signature_checker = ecdsa.VerifyingKey.from_string(bytes.fromhex(public_key), curve=CURVE, hashfunc=HASH_FUNCTION)
 					timestamp = str(int(datetime.utcnow().timestamp()))
 					payload = ((auth_data[2]+request.method+request.full_path.strip('?')).encode('utf-8')+request.data)
@@ -34,13 +34,13 @@ class Auth:
 	def login(self, request_data):
 		public_key = request_data["public_key"]
 		del request_data["public_key"]
-		results = self.database.read('auth', **request_data)
+		results = self.database.read('credential', **request_data)
 		if len(results) == 1:
-			self.database.update('auth', results[0]['id'], public_key=public_key)
+			self.database.update('credential', results[0]['id'], public_key=public_key)
 			return jsonify({'id':results[0]['id']})
 		return '', 401
 
 	def logout(self, request):
 		auth_id = request.headers.get('Authorization').split('.')[0]
-		self.database.update('auth', auth_id, {'public_key': None})
+		self.database.update('credential', auth_id, {'public_key': None})
 		return '', 204
