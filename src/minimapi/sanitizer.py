@@ -17,6 +17,8 @@ class Sanitizer:
 		return types
 
 	def check_type(self, type, key, value):
+		if not value:
+			return True
 		if type == 'foreign':
 			return ((not self.database) or (key in self.model and self.database.read(key, id=value)))
 		elif type in self.types:
@@ -89,12 +91,12 @@ class Sanitizer:
 						if 'encrypted' in self.model[table][property]['tags']:
 							type_to_check = 'text'
 						
-						if not self.check_type(type_to_check, property, result[property]):
-							row[property] = None
-						
 						if 'unlistable' in self.model[table][property]['tags'] and listing:
 							row[property] = '-'
 							continue
+
+					if result[property] and not self.check_type(type_to_check, property, result[property]):
+						row[property] = None
 						
 					if type_to_check in self.types and hasattr(self.types[type_to_check], 'response_task') and result[property]:
 						row[property] = self.types[type_to_check].response_task(result[property])
