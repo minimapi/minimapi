@@ -92,7 +92,7 @@ class Sanitizer:
 							type_to_check = 'text'
 						
 						if 'unlistable' in self.model[table][property]['tags'] and listing:
-							row[property] = '-'
+							row[property] = '•' if bool(result[property]) else ''
 							continue
 
 					if result[property] and not self.check_type(type_to_check, property, result[property]):
